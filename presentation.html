@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html class="light" lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Геймификация для резидентов — Lumina Academic</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Hanken+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "error-rose": "#F43F5E", "surface-bg": "#F8FAFC",
+        "surface-container-highest": "#d3e4fe", "on-secondary-fixed": "#25005a",
+        "secondary-fixed": "#eaddff", "surface-container": "#e5eeff",
+        "on-background": "#0b1c30", "on-secondary": "#ffffff",
+        "secondary-fixed-dim": "#d2bbff", "on-surface": "#0b1c30",
+        "on-primary": "#ffffff", "on-primary-fixed-variant": "#264191",
+        "tertiary-fixed-dim": "#ffb690", "primary-fixed": "#dce1ff",
+        "on-tertiary-fixed": "#341100", "on-tertiary-container": "#ff8f4f",
+        "on-primary-container": "#90a8ff", "surface-bright": "#f8f9ff",
+        "secondary": "#712ae2", "background": "#f8f9ff",
+        "on-primary-fixed": "#00164e", "surface-container-high": "#dce9ff",
+        "surface-container-low": "#eff4ff", "surface-dim": "#cbdbf5",
+        "error-container": "#ffdad6", "inverse-on-surface": "#eaf1ff",
+        "surface-tint": "#4059aa", "on-surface-variant": "#444651",
+        "primary": "#00236f", "on-error-container": "#93000a",
+        "outline-variant": "#c5c5d3", "on-error": "#ffffff",
+        "secondary-container": "#8a4cfc", "tertiary": "#4b1c00",
+        "on-secondary-container": "#fffbff", "points-gold": "#FACC15",
+        "inverse-surface": "#213145", "inverse-primary": "#b6c4ff",
+        "primary-container": "#1e3a8a", "surface": "#f8f9ff",
+        "tertiary-container": "#6e2d00", "on-secondary-fixed-variant": "#5a00c6",
+        "outline": "#757682", "on-tertiary": "#ffffff",
+        "surface-variant": "#d3e4fe", "primary-fixed-dim": "#b6c4ff",
+        "on-tertiary-fixed-variant": "#783200", "error": "#ba1a1a",
+        "success-emerald": "#10B981", "surface-container-lowest": "#ffffff"
+      },
+      borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", "2xl": "1rem", "3xl": "1.5rem", full: "9999px" },
+      spacing: { "margin-mobile": "16px", "max-width": "1280px", "gutter": "16px", "margin-desktop": "32px", "unit": "4px" },
+      fontFamily: {
+        "sans": ["Inter", "system-ui", "sans-serif"],
+        "display": ["Hanken Grotesk", "system-ui", "sans-serif"],
+        "mono": ["JetBrains Mono", "monospace"]
+      },
+      fontSize: {
+        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+        "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+        "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+        "display-balance": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "display-lg": ["56px", { lineHeight: "64px", letterSpacing: "-0.02em", fontWeight: "800" }],
+        "label-md": ["14px", { lineHeight: "20px", fontWeight: "600" }],
+        "caption": ["12px", { lineHeight: "16px", fontWeight: "500" }]
+      }
+    }
+  }
+}
+</script>
+<style>
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+  @keyframes countUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .slide-animate { animation: fadeIn 0.5s ease-out both; }
+  .slide-animate-delay-1 { animation-delay: 0.1s; }
+  .slide-animate-delay-2 { animation-delay: 0.2s; }
+  .slide-animate-delay-3 { animation-delay: 0.3s; }
+  .slide-animate-delay-4 { animation-delay: 0.4s; }
+  .slide-animate-delay-5 { animation-delay: 0.5s; }
+  html { scroll-behavior: smooth; scroll-snap-type: y proximity; }
+  .slide-section { scroll-snap-align: start; min-height: 100vh; }
+  @media (max-width: 768px) {
+    .slide-section { min-height: auto; padding: 2rem 0; }
+    .display-lg { font-size: 36px !important; line-height: 44px !important; }
+    .text-headline-lg { font-size: 24px !important; line-height: 32px !important; }
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f1f5f9; }
+  ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+  .progress-dot { transition: all 0.3s ease; }
+  .progress-dot.active { background: #00236f; transform: scale(1.3); }
+  .glass-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .gradient-text { background: linear-gradient(135deg, #00236f 0%, #1e3a8a 50%, #712ae2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .gradient-card { background: linear-gradient(135deg, #f8f9ff 0%, #eaddff 100%); }
+  .hover-lift { transition: all 0.2s ease; }
+  .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,35,111,0.08); }
+  .bg-grid { background-image: linear-gradient(rgba(0,35,111,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,35,111,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+</style>
+</head>
+<body class="bg-surface-bg text-on-surface font-sans">
+
+<!-- ===== NAVIGATION DOTS ===== -->
+<nav class="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-2.5" id="slideNav" aria-label="Навигация">
+</nav>
+
+<!-- ===== SLIDE 1: TITLE ===== -->
+<section class="slide-section relative bg-surface-bg overflow-hidden" data-index="0">
+  <div class="bg-grid absolute inset-0"></div>
+  <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-tertiary-container"></div>
+  <div class="absolute -top-40 -right-40 w-96 h-96 bg-secondary-fixed-dim rounded-full opacity-20 blur-3xl"></div>
+  <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-primary-fixed rounded-full opacity-20 blur-3xl"></div>
+  <div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-margin-mobile md:px-margin-desktop max-w-max-width mx-auto text-center">
+    <div class="slide-animate">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-low border border-outline-variant mb-8 text-on-surface-variant text-caption font-caption">
+        <span class="material-symbols-outlined text-primary text-sm" style="font-size:16px;">school</span>
+        Lumina Academic
+        <span class="w-1.5 h-1.5 rounded-full bg-surface-container-highest"></span>
+        Версия 2.0 • 02.06.2026
+      </div>
+    </div>
+    <h1 class="slide-animate-delay-1 font-display text-display-lg text-primary mb-4 max-w-4xl leading-tight">
+      Геймификация<br/>
+      <span class="gradient-text">для резидентов</span>
+    </h1>
+    <p class="slide-animate-delay-2 font-sans text-body-lg text-on-surface-variant max-w-2xl mb-10 leading-relaxed">
+      Повышение вовлечённости резидентов через прозрачную систему<br class="hidden md:block"/>
+      поощрения за активность на платформе
+    </p>
+    <div class="slide-animate-delay-3 flex flex-wrap justify-center gap-3">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md">
+        <span class="material-symbols-outlined text-sm" style="font-size:16px;">rocket_launch</span>
+        MVP
+      </span>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md">
+        <span class="material-symbols-outlined text-sm" style="font-size:16px;">group</span>
+        5 User Stories
+      </span>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-md text-label-md">
+        <span class="material-symbols-outlined text-sm" style="font-size:16px;">flag</span>
+        3 Waves
+      </span>
+    </div>
+    <div class="slide-animate-delay-4 mt-16 flex flex-col items-center gap-2 text-on-surface-variant text-caption">
+      <span class="material-symbols-outlined animate-bounce">keyboard_double_arrow_down</span>
+      <span>Прокрутите для продолжения</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 2: EXECUTIVE SUMMARY ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="1">
+  <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="slide-animate max-w-3xl">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-4 rounded-full bg-primary text-on-primary font-label-md text-caption">
+        <span class="material-symbols-outlined text-sm" style="font-size:14px;">summary</span>
+        Executive Summary
+      </span>
+      <h2 class="font-display text-headline-lg text-primary mb-6">Краткое резюме</h2>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div class="lg:col-span-3 space-y-6">
+        <div class="slide-animate-delay-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-8">
+          <p class="font-sans text-body-lg text-on-surface leading-relaxed">
+            Нужно подготовить к разработке первую итерацию фичи геймификации:
+          </p>
+          <ul class="mt-5 space-y-3">
+            <li class="flex items-start gap-3 text-body-md text-on-surface-variant">
+              <span class="material-symbols-outlined text-success-emerald mt-0.5" style="font-size:20px;">check_circle</span>
+              <span>Резиденты получают <strong class="text-on-surface">баллы за сдачу домашних заданий</strong></span>
+            </li>
+            <li class="flex items-start gap-3 text-body-md text-on-surface-variant">
+              <span class="material-symbols-outlined text-success-emerald mt-0.5" style="font-size:20px;">check_circle</span>
+              <span>Видят <strong class="text-on-surface">баланс в личном кабинете</strong></span>
+            </li>
+            <li class="flex items-start gap-3 text-body-md text-on-surface-variant">
+              <span class="material-symbols-outlined text-success-emerald mt-0.5" style="font-size:20px;">check_circle</span>
+              <span>Могут смотреть <strong class="text-on-surface">лидерборд</strong></span>
+            </li>
+            <li class="flex items-start gap-3 text-body-md text-on-surface-variant">
+              <span class="material-symbols-outlined text-success-emerald mt-0.5" style="font-size:20px;">check_circle</span>
+              <span>Получают <strong class="text-on-surface">напоминание</strong> после недели неактивности</span>
+            </li>
+            <li class="flex items-start gap-3 text-body-md text-on-surface-variant">
+              <span class="material-symbols-outlined text-success-emerald mt-0.5" style="font-size:20px;">check_circle</span>
+              <span>Администратор может <strong class="text-on-surface">вручную начислять баллы</strong></span>
+            </li>
+          </ul>
+        </div>
+        <div class="slide-animate-delay-2 bg-surface-container-low border border-outline-variant rounded-2xl p-6 border-l-4 border-l-secondary">
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-secondary mt-0.5">lightbulb</span>
+            <div>
+              <p class="font-label-md text-label-md text-primary mb-1">Главный принцип MVP</p>
+              <p class="text-body-md text-on-surface-variant">Сделать прозрачную и надёжную систему начисления баллов без расширения в уровни, бейджи, скидки, списания и сложные игровые механики.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-2 space-y-4">
+        <div class="slide-animate-delay-3 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6">
+          <h3 class="font-label-md text-label-md text-primary flex items-center gap-2 mb-4">
+            <span class="material-symbols-outlined text-secondary">assignment</span>
+            Документ
+          </h3>
+          <div class="space-y-3 text-body-sm text-on-surface-variant">
+            <div class="flex justify-between border-b border-outline-variant/50 pb-1.5">
+              <span>Версия</span>
+              <span class="text-on-surface font-medium">2.0</span>
+            </div>
+            <div class="flex justify-between border-b border-outline-variant/50 pb-1.5">
+              <span>Автор</span>
+              <span class="text-on-surface font-medium">Кандидат PM</span>
+            </div>
+            <div class="flex justify-between border-b border-outline-variant/50 pb-1.5">
+              <span>Дата</span>
+              <span class="text-on-surface font-medium">02.06.2026</span>
+            </div>
+            <div class="flex justify-between border-b border-outline-variant/50 pb-1.5">
+              <span>Статус</span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-fixed-dim/30 text-on-tertiary-fixed text-caption font-caption">Draft</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Источник</span>
+              <span class="text-on-surface font-medium">Устное описание</span>
+            </div>
+          </div>
+        </div>
+        <div class="slide-animate-delay-4 bg-gradient-to-br from-secondary-fixed to-surface-container-lowest border border-outline-variant rounded-2xl p-6">
+          <h3 class="font-label-md text-label-md text-primary flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-secondary">monitoring</span>
+            Ключевой принцип
+          </h3>
+          <p class="text-body-md text-on-surface font-medium">Прозрачность и надёжность операций с баллами — основа доверия к системе</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 3: SUCCESS METRICS ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="2">
+  <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="slide-animate text-center max-w-3xl mx-auto mb-12">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-4 rounded-full bg-primary text-on-primary font-label-md text-caption">
+        <span class="material-symbols-outlined text-sm" style="font-size:14px;">analytics</span>
+        Success Metrics
+      </span>
+      <h2 class="font-display text-headline-lg text-primary mb-4">Цель фичи и метрики успеха</h2>
+      <p class="text-body-lg text-on-surface-variant">Повысить вовлечённость резидентов через понятную систему поощрения за активность на платформе</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div class="slide-animate-delay-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 hover-lift">
+        <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL'1;font-size:22px;">assignment</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-on-surface mb-1">Homework submission rate</h3>
+        <p class="text-caption text-on-surface-variant mb-3 leading-relaxed">Доля резидентов, сдающих ДЗ. Основная метрика вовлечённости.</p>
+        <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-caption text-caption">
+          <span class="material-symbols-outlined text-xs" style="font-size:14px;">trending_up</span>
+          Цель: +15%
+        </div>
+      </div>
+      <div class="slide-animate-delay-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 hover-lift">
+        <div class="w-10 h-10 rounded-xl bg-success-emerald/10 flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-success-emerald" style="font-variation-settings:'FILL'1;font-size:22px;">groups</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-on-surface mb-1">Weekly active residents</h3>
+        <p class="text-caption text-on-surface-variant mb-3 leading-relaxed">Количество активных резидентов за неделю.</p>
+        <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-caption text-caption">
+          <span class="material-symbols-outlined text-xs" style="font-size:14px;">trending_up</span>
+          Цель: 85% WAU
+        </div>
+      </div>
+      <div class="slide-animate-delay-2 bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 hover-lift">
+        <div class="w-10 h-10 rounded-xl bg-error-container flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-error" style="font-variation-settings:'FILL'1;font-size:22px;">notifications_active</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-on-surface mb-1">Return after inactivity</h3>
+        <p class="text-caption text-on-surface-variant mb-3 leading-relaxed">Доля вернувшихся после push-уведомления (US-4).</p>
+        <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-caption text-caption">
+          <span class="material-symbols-outlined text-xs" style="font-size:14px;">trending_up</span>
+          Цель: 20% Conv.
+        </div>
+      </div>
+      <div class="slide-animate-delay-2 bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 hover-lift">
+        <div class="w-10 h-10 rounded-xl bg-points-gold/10 flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-points-gold" style="font-variation-settings:'FILL'1;font-size:22px;">star</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-on-surface mb-1">Leaderboard views</h3>
+        <p class="text-caption text-on-surface-variant mb-3 leading-relaxed">Просмотры лидерборда — интерес к соревновательной механике.</p>
+        <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-caption text-caption">
+          <span class="material-symbols-outlined text-xs" style="font-size:14px;">trending_up</span>
+          Цель: 3x/нед
+        </div>
+      </div>
+      <div class="slide-animate-delay-3 bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 hover-lift">
+        <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings:'FILL'1;font-size:22px;">handyman</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-on-surface mb-1">Manual accrual count</h3>
+        <p class="text-caption text-on-surface-variant mb-3 leading-relaxed">Количество ручных начислений — проверка злоупотреблений.</p>
+        <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-primary font-caption text-caption">
+          <span class="material-symbols-outlined text-xs" style="font-size:14px;">monitor_heart</span>
+          Мониторинг
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 4: MVP COMPOSITION ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="3">
+  <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="slide-animate max-w-3xl mb-12">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-4 rounded-full bg-secondary text-on-secondary font-label-md text-caption">
+        <span class="material-symbols-outlined text-sm" style="font-size:14px;">rocket_launch</span>
+        MVP Scope
+      </span>
+      <h2 class="font-display text-headline-lg text-primary mb-4">Состав MVP и приоритеты</h2>
+      <p class="text-body-lg text-on-surface-variant">5 user stories, распределённых по приоритетам</p>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <!-- US-1 -->
+      <div class="slide-animate-delay-1 lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 hover-lift">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL'1;font-size:22px;">how_to_vote</span>
+            </div>
+            <div>
+              <span class="font-label-md text-label-md text-primary">US-1</span>
+              <div class="text-caption text-on-surface-variant">Backend</div>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-error-container text-error font-caption text-caption font-semibold">
+            <span class="material-symbols-outlined text-xs" style="font-size:14px;">priority_high</span>
+            HIGH
+          </span>
+        </div>
+        <h3 class="font-display text-headline-sm text-on-surface mb-3">Начисление баллов за сдачу ДЗ</h3>
+        <p class="text-body-md text-on-surface-variant mb-4">Основа всей фичи. Баллы начисляются по правилам: 10 — вовремя, 5 — опоздание до 24ч, 0 — более 24ч.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-success-emerald/10 text-success-emerald font-caption text-caption">10 pts</span>
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-points-gold/10 text-points-gold font-caption text-caption">5 pts</span>
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-caption text-caption">0 pts</span>
+        </div>
+      </div>
+      <!-- US-2 -->
+      <div class="slide-animate-delay-1 lg:col-span-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 hover-lift">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center">
+              <span class="material-symbols-outlined text-on-secondary-fixed" style="font-variation-settings:'FILL'1;font-size:22px;">account_balance_wallet</span>
+            </div>
+            <div>
+              <span class="font-label-md text-label-md text-primary">US-2</span>
+              <div class="text-caption text-on-surface-variant">Frontend + API</div>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-error-container text-error font-caption text-caption font-semibold">
+            <span class="material-symbols-outlined text-xs" style="font-size:14px;">priority_high</span>
+            HIGH
+          </span>
+        </div>
+        <h3 class="font-display text-headline-sm text-on-surface mb-3">Отображение баланса в ЛК</h3>
+        <p class="text-body-md text-on-surface-variant">Резидент видит текущий баланс баллов; при ошибке — «Не удалось загрузить баллы».</p>
+      </div>
+      <!-- US-3 -->
+      <div class="slide-animate-delay-2 lg:col-span-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 hover-lift">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-points-gold/10 flex items-center justify-center">
+              <span class="material-symbols-outlined text-points-gold" style="font-variation-settings:'FILL'1;font-size:22px;">leaderboard</span>
+            </div>
+            <div>
+              <span class="font-label-md text-label-md text-primary">US-3</span>
+              <div class="text-caption text-on-surface-variant">Frontend + Backend</div>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-caption text-caption">MEDIUM</span>
+        </div>
+        <h3 class="font-display text-headline-sm text-on-surface mb-3">Лидерборд</h3>
+        <p class="text-body-md text-on-surface-variant">Только резиденты с балансом > 100 баллов. При ≤ 100 — сообщение «До лидерборда осталось N».</p>
+      </div>
+      <!-- US-4 -->
+      <div class="slide-animate-delay-2 lg:col-span-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 hover-lift">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-error-container flex items-center justify-center">
+              <span class="material-symbols-outlined text-error" style="font-variation-settings:'FILL'1;font-size:22px;">notifications</span>
+            </div>
+            <div>
+              <span class="font-label-md text-label-md text-primary">US-4</span>
+              <div class="text-caption text-on-surface-variant">Backend + Notifications</div>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-caption text-caption">MEDIUM</span>
+        </div>
+        <h3 class="font-display text-headline-sm text-on-surface mb-3">Push при неактивности</h3>
+        <p class="text-body-md text-on-surface-variant">Напоминание после 7 дней отсутствия. Не более 1 раза за серию отсутствия.</p>
+      </div>
+      <!-- US-5 -->
+      <div class="slide-animate-delay-3 lg:col-span-5 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 hover-lift">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL'1;font-size:22px;">admin_panel_settings</span>
+            </div>
+            <div>
+              <span class="font-label-md text-label-md text-primary">US-5</span>
+              <div class="text-caption text-on-surface-variant">Admin Panel + Backend</div>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-caption text-caption">MEDIUM</span>
+        </div>
+        <h3 class="font-display text-headline-sm text-on-surface mb-3">Ручное начисление баллов администратором</h3>
+        <p class="text-body-md text-on-surface-variant">Поиск резидента (min 3 символа), поле «Причина» 5–200 символов, confirmation modal, последние 10 начислений для предотвращения дублей.</p>
+        <div class="flex flex-wrap gap-3 mt-4">
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant font-caption text-caption">
+            <span class="material-symbols-outlined text-xs" style="font-size:14px;">search</span>
+            Поиск 3+ символа
+          </span>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant font-caption text-caption">
+            <span class="material-symbols-outlined text-xs" style="font-size:14px;">exposure_plus_1</span>
+            1–500 баллов
+          </span>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant font-caption text-caption">
+            <span class="material-symbols-outlined text-xs" style="font-size:14px;">history</span>
+            Последние 10
+          </span>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant font-caption text-caption">
+            <span class="material-symbols-outlined text-xs" style="font-size:14px;">lock</span>
+            Роль Administrator
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 5: POINTS SYSTEM ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="4">
+  <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="slide-animate max-w-3xl mb-12">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-4 rounded-full bg-primary text-on-primary font-label-md text-caption">
+        <span class="material-symbols-outlined text-sm" style="font-size:14px;">token</span>
+        Points System
+      </span>
+      <h2 class="font-display text-headline-lg text-primary mb-4">Правила начисления баллов</h2>
+      <p class="text-body-lg text-on-surface-variant">Чёткая и прозрачная система — основа доверия к геймификации</p>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <!-- On Time -->
+      <div class="slide-animate-delay-1 bg-gradient-to-br from-surface-container-lowest to-success-emerald/5 border border-success-emerald/20 rounded-2xl p-8 text-center hover-lift">
+        <div class="w-16 h-16 rounded-2xl bg-success-emerald/10 flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-success-emerald" style="font-variation-settings:'FILL'1;font-size:36px;">check_circle</span>
+        </div>
+        <div class="font-display text-display-balance text-success-emerald mb-2">10</div>
+        <p class="font-label-md text-label-md text-on-surface mb-1">Вовремя</p>
+        <p class="text-body-md text-on-surface-variant">До дедлайна включительно</p>
+      </div>
+      <!-- Late -->
+      <div class="slide-animate-delay-2 bg-gradient-to-br from-surface-container-lowest to-points-gold/5 border border-points-gold/20 rounded-2xl p-8 text-center hover-lift">
+        <div class="w-16 h-16 rounded-2xl bg-points-gold/10 flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-points-gold" style="font-variation-settings:'FILL'1;font-size:36px;">schedule</span>
+        </div>
+        <div class="font-display text-display-balance text-points-gold mb-2">5</div>
+        <p class="font-label-md text-label-md text-on-surface mb-1">С опозданием</p>
+        <p class="text-body-md text-on-surface-variant">После дедлайна, но ≤ 24 часов</p>
+      </div>
+      <!-- Very Late -->
+      <div class="slide-animate-delay-3 bg-gradient-to-br from-surface-container-lowest to-error/5 border border-error/10 rounded-2xl p-8 text-center hover-lift">
+        <div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings:'FILL'1;font-size:36px;">block</span>
+        </div>
+        <div class="font-display text-display-balance text-on-surface-variant mb-2">0</div>
+        <p class="font-label-md text-label-md text-on-surface mb-1">Просрочено</p>
+        <p class="text-body-md text-on-surface-variant">Более 24 часов после дедлайна</p>
+      </div>
+    </div>
+    <div class="slide-animate-delay-4 bg-surface-container-low border border-outline-variant rounded-2xl p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-label-md text-label-md text-primary flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined">border_color</span>
+            Edge Cases
+          </h4>
+          <ul class="space-y-2 text-body-md text-on-surface-variant">
+            <li class="flex items-center gap-2">• Ровно в дедлайн — своевременно</li>
+            <li class="flex items-center gap-2">• Ровно через 24ч — 5 баллов</li>
+            <li class="flex items-center gap-2">• Через 24ч 1с — 0 баллов</li>
+            <li class="flex items-center gap-2">• Нет deadline_at — ошибка данных</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-label-md text-label-md text-primary flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined">gpp_good</span>
+            Ключевые гарантии
+          </h4>
+          <ul class="space-y-2 text-body-md text-on-surface-variant">
+            <li class="flex items-center gap-2">• Идемпотентность по submission_id</li>
+            <li class="flex items-center gap-2">• Атомарность balance + ledger</li>
+            <li class="flex items-center gap-2">• Пересдача не пересчитывает баллы</li>
+            <li class="flex items-center gap-2">• Изменение дедлайна не меняет историю</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 6: DATA MODEL ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="5">
+  <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="slide-animate max-w-3xl mb-12">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-4 rounded-full bg-primary text-on-primary font-label-md text-caption">
+        <span class="material-symbols-outlined text-sm" style="font-size:14px;">database</span>
+        Data Model
+      </span>
+      <h2 class="font-display text-headline-lg text-primary mb-4">Минимальная модель данных</h2>
+      <p class="text-body-lg text-on-surface-variant">PM-уровень контракта для единого понимания сущностей командой</p>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="slide-animate-delay-1 lg:col-span-1 bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-hidden hover-lift">
+        <div class="bg-primary-container px-6 py-3">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-on-primary-container" style="font-size:20px;">account_balance_wallet</span>
+            <h3 class="font-label-md text-label-md text-on-primary-container">points_balance</h3>
+          </div>
+        </div>
+        <div class="p-5 space-y-3">
+          <div class="flex justify-between text-body-sm border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">user_id</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">ID резидента</span>
+          </div>
+          <div class="flex justify-between text-body-sm border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">current_points</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">Текущий баланс</span>
+          </div>
+          <div class="flex justify-between text-body-sm">
+            <span class="text-on-surface-variant">updated_at</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">Последнее изменение</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-animate-delay-2 lg:col-span-1 bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-hidden hover-lift">
+        <div class="bg-secondary-fixed px-6 py-3">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-on-secondary-fixed" style="font-size:20px;">receipt_long</span>
+            <h3 class="font-label-md text-label-md text-on-secondary-fixed">points_ledger</h3>
+          </div>
+        </div>
+        <div class="p-5 space-y-2.5 text-body-sm">
+          <div class="flex justify-between border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">id</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">ID записи</span>
+          </div>
+          <div class="flex justify-between border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">user_id</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">ID резидента</span>
+          </div>
+          <div class="flex justify-between border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">points</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">Баллы (вкл. 0)</span>
+          </div>
+          <div class="flex justify-between border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">source</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">homework / manual</span>
+          </div>
+          <div class="flex justify-between border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">reason</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">Причина</span>
+          </div>
+          <div class="flex justify-between border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">submission_id</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">ID сдачи ДЗ</span>
+          </div>
+          <div class="flex justify-between border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">request_id</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">Для идемпотентности</span>
+          </div>
+          <div class="flex justify-between border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">created_by</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">System / admin_id</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-on-surface-variant">created_at</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">Дата создания</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-animate-delay-3 lg:col-span-1 bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-hidden hover-lift">
+        <div class="bg-primary-container px-6 py-3">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-on-primary-container" style="font-size:20px;">person</span>
+            <h3 class="font-label-md text-label-md text-on-primary-container">user_activity</h3>
+          </div>
+        </div>
+        <div class="p-5 space-y-3">
+          <div class="flex justify-between text-body-sm border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">user_id</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">ID резидента</span>
+          </div>
+          <div class="flex justify-between text-body-sm border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">last_login_at</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">Последний вход</span>
+          </div>
+          <div class="flex justify-between text-body-sm border-b border-outline-variant/30 pb-1.5">
+            <span class="text-on-surface-variant">inactivity_<br/>notification_sent</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">Флаг отправки</span>
+          </div>
+          <div class="flex justify-between text-body-sm">
+            <span class="text-on-surface-variant">notification_opt_out</span>
+            <span class="text-on-surface font-mono" style="font-family:JetBrains Mono,monospace">Отписка</span>
+          </div>
+        </div>
+        <div class="border-t border-outline-variant/30 px-5 py-3 bg-surface-container-low">
+          <div class="flex items-center gap-2 text-caption text-on-surface-variant">
+            <span class="material-symbols-outlined text-xs" style="font-size:14px;">info</span>
+            <span>Для US-4 (Push при неактивности)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 7: DEPENDENCY MAP + WAVES ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="6">
+  <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="slide-animate max-w-3xl mb-12">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-4 rounded-full bg-primary text-on-primary font-label-md text-caption">
+        <span class="material-symbols-outlined text-sm" style="font-size:14px;">account_tree</span>
+        Architecture
+      </span>
+      <h2 class="font-display text-headline-lg text-primary mb-4">Карта зависимостей</h2>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-12">
+      <div class="slide-animate-delay-1 lg:col-span-3 bg-surface-container-lowest border border-outline-variant rounded-2xl p-8">
+        <div class="flex flex-col items-center gap-4">
+          <!-- US-1 Central -->
+          <div class="bg-gradient-to-r from-primary-container to-primary text-on-primary-container rounded-2xl px-8 py-4 shadow-sm font-display text-headline-sm font-semibold flex items-center gap-3">
+            <span class="material-symbols-outlined">how_to_vote</span>
+            US-1 Начисление баллов
+          </div>
+          <div class="flex flex-wrap justify-center gap-6 mt-2">
+            <div class="flex flex-col items-center gap-2">
+              <div class="bg-secondary-fixed text-on-secondary-fixed rounded-xl px-5 py-3 font-label-md flex items-center gap-2 shadow-sm">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                US-2 Баланс в ЛК
+              </div>
+              <span class="font-caption text-caption text-on-surface-variant">Frontend + API</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <div class="bg-points-gold/10 text-points-gold border border-points-gold/30 rounded-xl px-5 py-3 font-label-md flex items-center gap-2 shadow-sm">
+                <span class="material-symbols-outlined">leaderboard</span>
+                US-3 Лидерборд
+              </div>
+              <span class="font-caption text-caption text-on-surface-variant">Зависит от US-2</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <div class="bg-surface-container text-primary rounded-xl px-5 py-3 font-label-md flex items-center gap-2 shadow-sm">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+                US-5 Ручное начисление
+              </div>
+              <span class="font-caption text-caption text-on-surface-variant">Единый сервис записи</span>
+            </div>
+          </div>
+          <div class="w-full border-t border-outline-variant/30 pt-4 mt-2 flex justify-center">
+            <div class="flex items-center gap-3 text-body-md text-on-surface-variant">
+              <span class="material-symbols-outlined text-error">notifications</span>
+              <span>US-4 Push при неактивности — независим, зависит от last_login_at</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-animate-delay-2 lg:col-span-2 bg-surface-container-low border border-outline-variant rounded-2xl p-6">
+        <h3 class="font-label-md text-label-md text-primary flex items-center gap-2 mb-4">
+          <span class="material-symbols-outlined">info</span>
+          Ключевые связи
+        </h3>
+        <ul class="space-y-3 text-body-md text-on-surface-variant">
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+            <span>US-2 зависит от US-1 (нужен сервис баллов)</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+            <span>US-3 зависит от US-2 (пользователь сначала видит свой баланс)</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary mt-2 shrink-0"></span>
+            <span>US-4 не зависит от баллов (отдельный сервис)</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+            <span>US-5 через тот же backend, что US-1</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Waves -->
+    <div class="slide-animate-delay-3">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="h-8 w-1.5 bg-secondary rounded-full"></div>
+        <h3 class="font-display text-headline-md text-primary">Рекомендуемый порядок разработки</h3>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div class="md:col-span-2 bg-gradient-to-br from-primary-container to-primary text-on-primary-container rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-3">
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/20 text-white font-caption text-caption">
+              <span class="material-symbols-outlined text-xs" style="font-size:14px;">waves</span>
+              Волна 1
+            </span>
+            <span class="text-white/70 font-caption">Параллельно</span>
+          </div>
+          <h4 class="font-display text-headline-sm mb-2">US-1 + US-4</h4>
+          <p class="text-body-md text-white/80">
+            Надёжное начисление, ledger, и retention-механика независимо от баллов.
+          </p>
+          <div class="mt-4 flex items-center gap-2 text-caption text-white/70">
+            <span class="material-symbols-outlined text-xs" style="font-size:14px;">check_circle</span>
+            Условие: закрыты вопросы 1–2
+          </div>
+        </div>
+        <div class="md:col-span-2 bg-gradient-to-br from-secondary-fixed to-surface-container-lowest border border-secondary-fixed-dim text-on-surface rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-3">
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-secondary text-on-secondary font-caption text-caption">
+              <span class="material-symbols-outlined text-xs" style="font-size:14px;">waves</span>
+              Волна 2
+            </span>
+            <span class="text-on-surface-variant/70 font-caption">Параллельно</span>
+          </div>
+          <h4 class="font-display text-headline-sm mb-2">US-2 + US-5</h4>
+          <p class="text-body-md text-on-surface-variant">
+            Пользователь видит баланс, админ может начислять вручную.
+          </p>
+          <div class="mt-4 flex items-center gap-2 text-caption text-on-surface-variant">
+            <span class="material-symbols-outlined text-xs" style="font-size:14px;">check_circle</span>
+            Условие: принята backend-логика US-1
+          </div>
+        </div>
+        <div class="bg-gradient-to-br from-points-gold/10 to-surface-container-lowest border border-points-gold/30 text-on-surface rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-3">
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-points-gold/20 text-on-surface font-caption text-caption">
+              <span class="material-symbols-outlined text-xs" style="font-size:14px;">waves</span>
+              Волна 3
+            </span>
+          </div>
+          <h4 class="font-display text-headline-sm mb-2">US-3</h4>
+          <p class="text-body-md text-on-surface-variant">
+            Лидерборд и рейтинг.
+          </p>
+          <div class="mt-4 flex items-center gap-2 text-caption text-on-surface-variant">
+            <span class="material-symbols-outlined text-xs" style="font-size:14px;">check_circle</span>
+            Условие: есть баланс + privacy-формат
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 8: ASSUMPTIONS + NFR ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="7">
+  <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="slide-animate max-w-3xl mb-12">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-4 rounded-full bg-primary text-on-primary font-label-md text-caption">
+        <span class="material-symbols-outlined text-sm" style="font-size:14px;">engineering</span>
+        Requirements
+      </span>
+      <h2 class="font-display text-headline-lg text-primary mb-4">Допущения и Non-Functional Requirements</h2>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Assumptions -->
+      <div class="slide-animate-delay-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6">
+        <h3 class="font-label-md text-label-md text-primary flex items-center gap-2 mb-4">
+          <span class="material-symbols-outlined">assistant_navigation</span>
+          Принятые допущения
+        </h3>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+            <span>«Опоздание на день» = 1 сек – 24 часа после дедлайна</span>
+          </li>
+          <li class="flex items-start gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+            <span>Дедлайн сравнивается по серверному времени UTC</span>
+          </li>
+          <li class="flex items-start gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+            <span>Опоздание &gt; 24ч → запись с 0 баллов (прозрачный аудит)</span>
+          </li>
+          <li class="flex items-start gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+            <span>В лидерборде — текущий баланс баллов</span>
+          </li>
+          <li class="flex items-start gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+            <span>Push = web push / существующий канал платформы</span>
+          </li>
+          <li class="flex items-start gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+            <span>Audit log обязателен, история начислений — не в MVP</span>
+          </li>
+        </ul>
+      </div>
+      <!-- NFRs -->
+      <div class="slide-animate-delay-2 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6">
+        <h3 class="font-label-md text-label-md text-primary flex items-center gap-2 mb-4">
+          <span class="material-symbols-outlined">speed</span>
+          Non-Functional Requirements
+        </h3>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center p-3 rounded-xl bg-surface-container-low">
+            <span class="text-body-md text-on-surface">Баланс API</span>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-success-emerald/10 text-success-emerald font-caption text-caption font-medium">≤ 200 мс</span>
+          </div>
+          <div class="flex justify-between items-center p-3 rounded-xl bg-surface-container-low">
+            <span class="text-body-md text-on-surface">Лидерборд (c кэшем)</span>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-success-emerald/10 text-success-emerald font-caption text-caption font-medium">≤ 500 мс</span>
+          </div>
+          <div class="flex justify-between items-center p-3 rounded-xl bg-surface-container-low">
+            <span class="text-body-md text-on-surface">Кэш лидерборда</span>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-points-gold/10 text-points-gold font-caption text-caption font-medium">до 1 часа</span>
+          </div>
+          <div class="flex justify-between items-center p-3 rounded-xl bg-surface-container-low">
+            <span class="text-body-md text-on-surface">Масштабируемость</span>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-caption text-caption font-medium">10 000 резидентов</span>
+          </div>
+          <div class="flex justify-between items-center p-3 rounded-xl bg-surface-container-low">
+            <span class="text-body-md text-on-surface">Безопасность</span>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-error-container text-error font-caption text-caption font-medium">Авторизация + Роли</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 9: OUT OF SCOPE + OPEN QUESTIONS ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="8">
+  <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="slide-animate max-w-3xl mb-12">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-4 rounded-full bg-primary text-on-primary font-label-md text-caption">
+        <span class="material-symbols-outlined text-sm" style="font-size:14px;">help</span>
+        Boundaries
+      </span>
+      <h2 class="font-display text-headline-lg text-primary mb-4">Out of Scope и открытые вопросы</h2>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="slide-animate-delay-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6">
+        <h3 class="font-label-md text-label-md text-error flex items-center gap-2 mb-4">
+          <span class="material-symbols-outlined">do_not_disturb_on</span>
+          Out of Scope (MVP)
+        </h3>
+        <div class="space-y-2.5">
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-error/5 border border-error/10">
+            <span class="w-2 h-2 rounded-full bg-error shrink-0"></span>
+            <span class="text-body-md text-on-surface-variant">Уровни, звания, бейджи и достижения</span>
+          </div>
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-error/5 border border-error/10">
+            <span class="w-2 h-2 rounded-full bg-error shrink-0"></span>
+            <span class="text-body-md text-on-surface-variant">Пользовательская история начислений в ЛК</span>
+          </div>
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-error/5 border border-error/10">
+            <span class="w-2 h-2 rounded-full bg-error shrink-0"></span>
+            <span class="text-body-md text-on-surface-variant">Анимации и визуальные эффекты при начислении</span>
+          </div>
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-error/5 border border-error/10">
+            <span class="w-2 h-2 rounded-full bg-error shrink-0"></span>
+            <span class="text-body-md text-on-surface-variant">Списание, штрафные и отрицательные баллы</span>
+          </div>
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-error/5 border border-error/10">
+            <span class="w-2 h-2 rounded-full bg-error shrink-0"></span>
+            <span class="text-body-md text-on-surface-variant">Интеграция с оплатой, скидками или бонусами</span>
+          </div>
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-error/5 border border-error/10">
+            <span class="w-2 h-2 rounded-full bg-error shrink-0"></span>
+            <span class="text-body-md text-on-surface-variant">A/B-тестирование, антифрод, публичный профиль</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-animate-delay-2 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6">
+        <h3 class="font-label-md text-label-md text-points-gold flex items-center gap-2 mb-4">
+          <span class="material-symbols-outlined">quiz</span>
+          Открытые вопросы
+        </h3>
+        <div class="space-y-2.5">
+          <div class="flex items-start gap-3 p-2.5 rounded-xl bg-surface-container-low">
+            <span class="w-5 h-5 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-caption text-caption font-bold">1</span>
+            <div>
+              <p class="text-body-md text-on-surface">0 баллов при опоздании &gt; 24ч — запись или нет?</p>
+              <span class="text-caption text-on-surface-variant">Влияет: US-1, US-2</span>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-2.5 rounded-xl bg-surface-container-low">
+            <span class="w-5 h-5 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-caption text-caption font-bold">2</span>
+            <div>
+              <p class="text-body-md text-on-surface">Дедлайн: UTC или timezone резидента?</p>
+              <span class="text-caption text-on-surface-variant">Влияет: US-1</span>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-2.5 rounded-xl bg-surface-container-low">
+            <span class="w-5 h-5 rounded-full bg-secondary-fixed text-on-secondary-fixed shrink-0 flex items-center justify-center font-caption text-caption font-bold">3</span>
+            <div>
+              <p class="text-body-md text-on-surface">Обновление баланса: polling / websocket?</p>
+              <span class="text-caption text-on-surface-variant">Влияет: US-2</span>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-2.5 rounded-xl bg-surface-container-low">
+            <span class="w-5 h-5 rounded-full bg-secondary-fixed text-on-secondary-fixed shrink-0 flex items-center justify-center font-caption text-caption font-bold">5</span>
+            <div>
+              <p class="text-body-md text-on-surface">Что показываем в лидерборде: полное имя / псевдоним?</p>
+              <span class="text-caption text-on-surface-variant">Влияет: US-3</span>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-2.5 rounded-xl bg-surface-container-low">
+            <span class="w-5 h-5 rounded-full bg-secondary-fixed text-on-secondary-fixed shrink-0 flex items-center justify-center font-caption text-caption font-bold">7</span>
+            <div>
+              <p class="text-body-md text-on-surface">Канал push: web push / email / in-app / mobile?</p>
+              <span class="text-caption text-on-surface-variant">Влияет: US-4</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 p-3 rounded-xl bg-points-gold/10 border border-points-gold/20 text-center">
+          <span class="text-caption text-on-surface-variant">Полный список — 10 вопросов (см. документ)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 10: RISKS ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="9">
+  <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="slide-animate max-w-3xl mb-12">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-4 rounded-full bg-primary text-on-primary font-label-md text-caption">
+        <span class="material-symbols-outlined text-sm" style="font-size:14px;">shield</span>
+        Risk Management
+      </span>
+      <h2 class="font-display text-headline-lg text-primary mb-4">Риски и способы снижения</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="slide-animate-delay-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 hover-lift">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-xl bg-error-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-error" style="font-size:20px;">file_copy</span>
+          </div>
+          <h4 class="font-label-md text-label-md text-on-surface">Дубли начислений</h4>
+        </div>
+        <p class="text-caption text-on-surface-variant mb-2">Недоверие к системе баллов из-за повторных начислений.</p>
+        <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success-emerald/10 text-success-emerald font-caption text-caption">
+          Идемпотентность + ledger
+        </div>
+      </div>
+      <div class="slide-animate-delay-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 hover-lift">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-xl bg-points-gold/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-points-gold" style="font-size:20px;">schedule</span>
+          </div>
+          <h4 class="font-label-md text-label-md text-on-surface">Неясные дедлайны</h4>
+        </div>
+        <p class="text-caption text-on-surface-variant mb-2">Споры с пользователями из-за timezone.</p>
+        <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success-emerald/10 text-success-emerald font-caption text-caption">
+          Фиксируем правило до разработки
+        </div>
+      </div>
+      <div class="slide-animate-delay-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 hover-lift">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-on-surface-variant" style="font-size:20px;">sentiment_neutral</span>
+          </div>
+          <h4 class="font-label-md text-label-md text-on-surface">Лидерборд демотивирует</h4>
+        </div>
+        <p class="text-caption text-on-surface-variant mb-2">Новички теряют вовлечённость.</p>
+        <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success-emerald/10 text-success-emerald font-caption text-caption">
+          Порог &gt; 100 баллов + подсказка
+        </div>
+      </div>
+      <div class="slide-animate-delay-2 bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 hover-lift">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-xl bg-error-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-error" style="font-size:20px;">lock</span>
+          </div>
+          <h4 class="font-label-md text-label-md text-on-surface">Нарушение приватности</h4>
+        </div>
+        <p class="text-caption text-on-surface-variant mb-2">Жалобы пользователей на отображение в лидерборде.</p>
+        <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success-emerald/10 text-success-emerald font-caption text-caption">
+          Согласовать формат имени
+        </div>
+      </div>
+      <div class="slide-animate-delay-2 bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 hover-lift">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-on-surface-variant" style="font-size:20px;">notifications_off</span>
+          </div>
+          <h4 class="font-label-md text-label-md text-on-surface">Push — агрессивный</h4>
+        </div>
+        <p class="text-caption text-on-surface-variant mb-2">Негатив к платформе из-за навязчивости.</p>
+        <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success-emerald/10 text-success-emerald font-caption text-caption">
+          Opt-out + согласование текста
+        </div>
+      </div>
+      <div class="slide-animate-delay-2 bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 hover-lift">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-xl bg-points-gold/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-points-gold" style="font-size:20px;">handyman</span>
+          </div>
+          <h4 class="font-label-md text-label-md text-on-surface">Ручное начисление вместо системного</h4>
+        </div>
+        <p class="text-caption text-on-surface-variant mb-2">Рост ручной операционки.</p>
+        <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-success-emerald/10 text-success-emerald font-caption text-caption">
+          Мониторинг manual accruals
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 11: TESTING ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="10">
+  <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="slide-animate max-w-3xl mb-12">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-4 rounded-full bg-primary text-on-primary font-label-md text-caption">
+        <span class="material-symbols-outlined text-sm" style="font-size:14px;">bug_report</span>
+        Testing
+      </span>
+      <h2 class="font-display text-headline-lg text-primary mb-4">Тестирование</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="slide-animate-delay-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 hover-lift">
+        <div class="w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL'1;font-size:24px;">dns</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-on-surface mb-3">Backend</h3>
+        <ul class="space-y-2.5">
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            10 / 5 / 0 баллов
+          </li>
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            Граничные значения дедлайна
+          </li>
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            Идемпотентность (submission_id)
+          </li>
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            Атомарность balance + ledger
+          </li>
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            Auth/role enforcement
+          </li>
+        </ul>
+      </div>
+      <div class="slide-animate-delay-2 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 hover-lift">
+        <div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-on-secondary-fixed" style="font-variation-settings:'FILL'1;font-size:24px;">devices</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-on-surface mb-3">Frontend</h3>
+        <ul class="space-y-2.5">
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Баланс 0 и положительный
+          </li>
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Состояние ошибки загрузки
+          </li>
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Responsive 320px+
+          </li>
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Лидерборд (с/без участников)
+          </li>
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Confirmation modal
+          </li>
+        </ul>
+      </div>
+      <div class="slide-animate-delay-3 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 hover-lift">
+        <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings:'FILL'1;font-size:24px;">notifications</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-on-surface mb-3">Notifications</h3>
+        <ul class="space-y-2.5">
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span>
+            Выборка 7+ дней отсутствия
+          </li>
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span>
+            Нет дублей при повторе job
+          </li>
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span>
+            Сброс флага после входа
+          </li>
+          <li class="flex items-center gap-2 text-body-md text-on-surface-variant">
+            <span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span>
+            Opt-out уведомлений
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 12: DOD + DOR ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="11">
+  <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="slide-animate max-w-3xl mb-12">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-4 rounded-full bg-primary text-on-primary font-label-md text-caption">
+        <span class="material-symbols-outlined text-sm" style="font-size:14px;">checklist</span>
+        Governance
+      </span>
+      <h2 class="font-display text-headline-lg text-primary mb-4">Definition of Ready &amp; Definition of Done</h2>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="slide-animate-delay-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-xl bg-success-emerald/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-success-emerald" style="font-variation-settings:'FILL'1;font-size:22px;">checklist</span>
+          </div>
+          <h3 class="font-display text-headline-sm text-on-surface">Definition of Ready</h3>
+        </div>
+        <p class="text-caption text-on-surface-variant mb-4">Задача готова к взятию в спринт, если:</p>
+        <ul class="space-y-2.5">
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-success-emerald mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Закрыты блокирующие вопросы</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-success-emerald mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Понятны роли и права доступа</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-success-emerald mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Есть критерии приёмки без двусмысленностей</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-success-emerald mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Определены зависимости (BE/FE/Notif/Admin)</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-success-emerald mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Задача оценена командой</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-success-emerald mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Согласованы макеты / UI-компоненты</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-success-emerald mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">API: понятны входные и выходные данные</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-success-emerald mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Согласованы ограничения приватности</span>
+          </li>
+        </ul>
+      </div>
+      <div class="slide-animate-delay-2 bg-surface-container-lowest border border-outline-variant rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL'1;font-size:22px;">flag</span>
+          </div>
+          <h3 class="font-display text-headline-sm text-on-surface">Definition of Done (Epic)</h3>
+        </div>
+        <p class="text-caption text-on-surface-variant mb-4">Epic завершён, если:</p>
+        <ul class="space-y-2.5">
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-primary mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Все user stories реализованы и прошли QA</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-primary mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">API задокументированы в OpenAPI/Swagger</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-primary mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Начисления идемпотентны, нет дублей</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-primary mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Все изменения пишутся в audit log</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-primary mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Права доступа проверены для всех ролей</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-primary mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Основные сценарии покрыты тестами</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-primary mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Мониторинг ошибок начисления и push</span>
+          </li>
+          <li class="flex items-start gap-3 text-body-md">
+            <span class="text-primary mt-0.5"><span class="material-symbols-outlined" style="font-size:18px;">check_small</span></span>
+            <span class="text-on-surface-variant">Продукт принял тексты и поведение</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 13: THANK YOU ===== -->
+<section class="slide-section relative py-16 md:py-24" data-index="12">
+  <div class="bg-grid absolute inset-0"></div>
+  <div class="absolute -top-40 -left-40 w-96 h-96 bg-primary-fixed rounded-full opacity-20 blur-3xl"></div>
+  <div class="absolute -bottom-20 -right-20 w-80 h-80 bg-secondary-fixed-dim rounded-full opacity-20 blur-3xl"></div>
+  <div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-margin-mobile md:px-margin-desktop max-w-max-width mx-auto text-center">
+    <div class="slide-animate">
+      <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mx-auto mb-8 shadow-lg">
+        <span class="material-symbols-outlined text-white" style="font-variation-settings:'FILL'1;font-size:40px;">stars</span>
+      </div>
+    </div>
+    <h1 class="slide-animate-delay-1 font-display text-display-lg text-primary mb-4">
+      Спасибо за внимание!
+    </h1>
+    <p class="slide-animate-delay-2 font-sans text-headline-md text-on-surface-variant max-w-2xl mb-8">
+      Геймификация для резидентов — версия 2.0
+    </p>
+    <div class="slide-animate-delay-3 flex flex-wrap items-center justify-center gap-6 text-caption text-on-surface-variant">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary" style="font-size:18px;">person</span>
+        Кандидат PM
+      </div>
+      <div class="w-1 h-4 bg-outline-variant"></div>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary" style="font-size:18px;">calendar_today</span>
+        02.06.2026
+      </div>
+      <div class="w-1 h-4 bg-outline-variant"></div>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary" style="font-size:18px;">school</span>
+        Lumina Academic
+      </div>
+    </div>
+    <div class="slide-animate-delay-4 mt-12 flex flex-wrap justify-center gap-4">
+      <button onclick="document.querySelector('[data-index=\\'0\\']').scrollIntoView({behavior:'smooth'})" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-on-primary font-label-md hover:bg-primary-container hover:text-on-primary-container transition-all duration-200">
+        <span class="material-symbols-outlined">replay</span>
+        Начать сначала
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Auto-navigation dots
+  const sections = document.querySelectorAll('[data-index]');
+  const nav = document.getElementById('slideNav');
+
+  sections.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'w-2.5 h-2.5 rounded-full bg-outline-variant hover:bg-primary transition-all duration-300 progress-dot';
+    dot.title = `Слайд ${i + 1}`;
+    dot.onclick = () => sections[i].scrollIntoView({ behavior: 'smooth' });
+    nav.appendChild(dot);
+  });
+
+  // Update active dot on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = parseInt(entry.target.dataset.index);
+        document.querySelectorAll('.progress-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === idx);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Intersection Observer for animations
+  const animObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.hover\\:shadow-\\[0_8px_16px_rgba\\(0\\,35\\,111\\,0\\.04\\)\\]').forEach(el => {
+    animObserver.observe(el);
+  });
+</script>
+</body>
+</html>
